@@ -1,8 +1,8 @@
 from fastapi import HTTPException, status, FastAPI
 from datetime import datetime
 from typing import Dict
-from blog.app.models.users import User, CreateUser, ChangeUserInfo, ResponseUser
-from blog.app.validator.validation import validate_email, validate_password, validate_login
+from models.users import User, CreateUser, ChangeUserInfo, ResponseUser
+from validator.validation import validate_email, validate_password, validate_login
 
 
 users_db: Dict[int, User] = {}
