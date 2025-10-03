@@ -1,12 +1,12 @@
 from fastapi import FastAPI
-from blog.app.CRUD.CRUD_post import create_post, update_post, delete_post
-from blog.app.models.Post import CreatePost, ChangePost
-from blog.app.models.users import CreateUser, ChangeUserInfo
-from blog.app.CRUD.CRUD_users import get_user, update_user, delete_user, get_user_by_email
+from CRUD.CRUD_post import create_post, update_post, delete_post
+from models.Post import CreatePost, ChangePost
+from models.users import CreateUser, ChangeUserInfo
+from CRUD.CRUD_users import get_user, update_user, delete_user, get_user_by_email
 
 app = FastAPI()
 
-@app.post('/{user}', response_model=CreateUser)
+@app.post('/user', response_model=CreateUser)
 async def create_new_user1(user: CreateUser):
     return create_new_user1(user)
 
