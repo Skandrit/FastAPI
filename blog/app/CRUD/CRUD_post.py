@@ -1,9 +1,9 @@
 from fastapi import HTTPException
 from datetime import datetime
 from typing import Dict
-from blog.app.models.Post import Post, CreatePost, ChangePost, ResponsePost
-from blog.app.validator.validation import validate_post_title, validate_post_content
-from blog.app.CRUD.CRUD_users import users_db
+from models.Post import Post, CreatePost, ChangePost, ResponsePost
+from validator.validation import validate_post_title, validate_post_content
+from CRUD.CRUD_users import users_db
 
 
 posts_db: Dict[int, Post] = {}
