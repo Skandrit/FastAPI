@@ -1,4 +1,4 @@
-from fastapi import HTTPException, status, FastAPI
+from fastapi import HTTPException, status
 from datetime import datetime
 from typing import Dict
 from models.users import User, CreateUser, ChangeUserInfo, ResponseUser
@@ -17,13 +17,13 @@ async def create_user(user: CreateUser):
             detail="Неверный формат почты"
         )
 
-    if not validate_password(user.password):
+    if validate_password(user.password):
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Пароль меньше 6 символов"
         )
 
-    if not validate_login(user.login):
+    if validate_login(user.login):
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Логин должен быть от 3 до 20 символов"
@@ -55,21 +55,39 @@ async def create_user(user: CreateUser):
         updated_at=now
     )
 
+    user_tmp = ResponseUser(
+        id=user_id_c,
+        email=user.email,
+        login=user.login,
+        created_at=now,
+        updated_at=now
+    )
+
     users_db[user_id_c] = new_user
     user_id_c += 1
 
-    return ResponseUser
+
+
+    return user_tmp
 
 
 async def get_user(user_id: int):
-
+    user = users_db.get(user_id)
     if not users_db.get(user_id):
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Пользователь не найден"
         )
 
-    return ResponseUser
+    user_tmp = ResponseUser(
+        id=user.id,
+        email=user.email,
+        login=user.login,
+        created_at=user.updated_at,
+        updated_at=user.updated_at
+    )
+
+    return user_tmp
 
 async def update_user(user_id: int, user_update: ChangeUserInfo):
     user = users_db.get(user_id)
@@ -78,30 +96,38 @@ async def update_user(user_id: int, user_update: ChangeUserInfo):
             status_code=404,
             detail="Поьзователь не найден")
 
-    if not validate_email(user_update['email']):
+    if not validate_email(user_update.email):
         raise HTTPException(
             status_code=400,
             detail="Неверный формат почты"
         )
 
-    if not validate_password(user_update['password']):
+    if validate_password(user_update.password):
         raise HTTPException(
             status_code=400,
             detail="Пароль меньше 6 символов"
         )
 
-    if not validate_login(user_update['login']):
+    if validate_login(user_update.login):
         raise HTTPException(
             status_code=400,
             detail="Логин должен быть от 3 до 20 символов"
         )
 
 
-    for field, value in user_update.items():
+    for field, value in user_update.__dict__.items():
         setattr(user, field, value)
     user.updated_at = datetime.now()
 
-    return ResponseUser
+    user_tmp = ResponseUser(
+        id=user.id,
+        email=user.email,
+        login=user.login,
+        created_at=user.updated_at,
+        updated_at=user.updated_at
+    )
+
+    return user_tmp
 
 
 async def delete_user(user_id: int):
@@ -123,7 +149,13 @@ async def get_user_by_email(email: str):
 
     for user in users_db.values():
         if user.email == email:
-            return ResponseUser
+            return ResponseUser(
+                id=user.id,
+                email=user.email,
+                login=user.login,
+                created_at=user.created_at,
+                updated_at=user.updated_at,
+            )
 
     raise HTTPException(
         status_code=status.HTTP_404_NOT_FOUND,

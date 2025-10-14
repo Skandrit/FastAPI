@@ -43,7 +43,7 @@ async def create_post(post: CreatePost, author_id: int):
     posts_db[post_id_c] = new_post
     post_id_c += 1
 
-    return "Пост добавлен"
+    return CreatePost(**new_post.__dict__)
 
 
 async def get_post(post_id: int):
@@ -53,31 +53,35 @@ async def get_post(post_id: int):
             status_code=404,
             detail="Пост не найден"
         )
-    return ResponsePost
+
+    post_tmp = ResponsePost(**post.__dict__)
+
+    return post_tmp
 
 async def update_post(post_id: int, post_update: ChangePost):
     post = posts_db.get(post_id)
     if not post:
         raise HTTPException(status_code=404, detail="Post not found")
 
-    if not validate_post_title(post_update['content']):
+    if not validate_post_title(post_update.title):
         raise HTTPException(
             status_code=400,
             detail="заголовок должен быть меньше 50 символов"
         )
 
-    if not validate_post_content(post_update['content']):
+    if not validate_post_content(post_update.content):
         raise HTTPException(
             status_code=400,
             detail="Текст должен быть от 1 до 200 символов"
         )
 
-    for field, value in post_update.items():
+    for field, value in post_update.__dict__.items():
         setattr(post, field, value)
     post.updated_at = datetime.now()
 
-    return ResponsePost
+    post_tmp = ResponsePost(**post.__dict__)
 
+    return post_tmp
 
 async def delete_post(post_id: int):
     if post_id not in posts_db:
