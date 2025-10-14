@@ -129,7 +129,7 @@ async def update_user(user_id: int, user_update: ChangeUserInfo):
 
     return user_tmp
 
-
+#
 async def delete_user(user_id: int):
 
     if user_id not in users_db:

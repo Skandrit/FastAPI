@@ -17,7 +17,7 @@ async def get_user1(user_id:int, response_model=ResponseUser):
 @app.put("/users/update/{user_id}", response_model=ResponseUser)
 async def update_user1(user_id: int, change: ChangeUserInfo):
     return await update_user(user_id, change)
-
+#
 @app.delete("/users/delete/{user_id}")
 async def delete_user1(user_id: int):
     return await delete_user(user_id)

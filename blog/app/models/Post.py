@@ -17,7 +17,7 @@ class CreatePost(BaseModel):
 class ChangePost(BaseModel):
     title: Optional[str] = None
     content: Optional[str] = None
-
+#
 class ResponsePost(BaseModel):
     id: int
     author_id: int

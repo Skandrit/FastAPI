@@ -16,6 +16,6 @@ def validate_login(login: str) -> bool:
 def validate_post_title(title: str) -> bool:
     return 1 <= len(title) <= 50
 
-
+#
 def validate_post_content(content: str) -> bool:
     return 1 <= len(content) <= 200
